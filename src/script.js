@@ -35,9 +35,10 @@ floor.position.y = 0
 house.add(floor)
 
 // Walls
+const wallsDepth = 4
 const wallsHeight = 3
 const walls = new THREE.Mesh(
-    new THREE.BoxGeometry(4, wallsHeight, 4),
+    new THREE.BoxGeometry(4, wallsHeight, wallsDepth),
     new THREE.MeshStandardMaterial({ color: 0xffff00 })
 )
 walls.position.y = wallsHeight / 2
@@ -46,11 +47,24 @@ house.add(walls)
 // roof
 const roof = new THREE.Mesh(
     new THREE.ConeGeometry(3.5, 1, 4),
-    new THREE.MeshBasicMaterial({ color: 0x3d2412 })
+    new THREE.MeshStandardMaterial({ color: 0x3d2412 })
 )
 roof.rotation.y = Math.PI / 4
 roof.position.y = wallsHeight + 0.5
 house.add(roof)
+
+// Door
+const doorTexture = textureLoader.load('/textures/door/color.jpg')
+const door = new THREE.Mesh(
+    new THREE.PlaneGeometry(1, 2),
+    new THREE.MeshBasicMaterial({ 
+        color: 0xffffff,
+        map: doorTexture
+    })
+) 
+door.position.z = (wallsDepth / 2) + 0.01
+door.position.y = 1
+house.add(door)
 
 /**
  * Lights
