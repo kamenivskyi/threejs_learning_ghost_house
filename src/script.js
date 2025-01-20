@@ -22,13 +22,8 @@ const textureLoader = new THREE.TextureLoader()
 /**
  * House
  */
-// Temporary sphere
-const sphere = new THREE.Mesh(
-    new THREE.SphereGeometry(1, 32, 32),
-    new THREE.MeshStandardMaterial({ roughness: 0.7 })
-)
-sphere.position.y = 1
-scene.add(sphere)
+const house = new THREE.Group()
+scene.add(house)
 
 // Floor
 const floor = new THREE.Mesh(
@@ -37,7 +32,25 @@ const floor = new THREE.Mesh(
 )
 floor.rotation.x = - Math.PI * 0.5
 floor.position.y = 0
-scene.add(floor)
+house.add(floor)
+
+// Walls
+const wallsHeight = 3
+const walls = new THREE.Mesh(
+    new THREE.BoxGeometry(4, wallsHeight, 4),
+    new THREE.MeshStandardMaterial({ color: 0xffff00 })
+)
+walls.position.y = wallsHeight / 2
+house.add(walls)
+
+// roof
+const roof = new THREE.Mesh(
+    new THREE.ConeGeometry(3.5, 1, 4),
+    new THREE.MeshBasicMaterial({ color: 0x3d2412 })
+)
+roof.rotation.y = Math.PI / 4
+roof.position.y = wallsHeight + 0.5
+house.add(roof)
 
 /**
  * Lights
