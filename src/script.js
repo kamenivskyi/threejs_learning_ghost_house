@@ -66,6 +66,41 @@ door.position.z = (wallsDepth / 2) + 0.01
 door.position.y = 1
 house.add(door)
 
+// Bushes
+const bushesArray = [
+    {
+        id: 1,
+        position: [0.8, 0.2, 2.2],
+        scale: [0.5, 0.5, 0.5],
+    },
+    {
+        id: 2,
+        position: [1.4, 0.1, 2.1],
+        scale: [0.25, 0.25, 0.25],
+    },
+    {
+        id: 3,
+        position: [-0.8, 0.1, 2.2],
+        scale: [0.4, 0.4, 0.4],
+    },
+    {
+        id: 4,
+        position: [-1, 0.05, 2.6],
+        scale: [0.15, 0.15, 0.15],
+    },
+]
+
+const bushGeometry = new THREE.SphereGeometry(1, 16, 16)
+const bushMaterial = new THREE.MeshBasicMaterial({ color: '#418c4c' })
+
+bushesArray.forEach((bush) => {
+    const bushMesh = new THREE.Mesh(bushGeometry, bushMaterial)
+    bushMesh.position.set(...bush.position)
+    bushMesh.scale.set(...bush.scale)
+
+    house.add(bushMesh)
+})
+
 /**
  * Lights
  */
