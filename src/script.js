@@ -75,6 +75,11 @@ const sphereSize = 1
 const pointLightHelper = new THREE.PointLightHelper(pointLight, 1)
 // house.add(pointLightHelper)
 
+// Fog
+// scene.fog = new THREE.Fog(0x000000, 2, 15)
+const fogColor = '#262837'
+scene.fog = new THREE.Fog(fogColor, 2, 15)
+
 // Bushes
 const bushesArray = [
     {
@@ -197,6 +202,7 @@ const renderer = new THREE.WebGLRenderer({
 })
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+renderer.setClearColor(fogColor)
 
 /**
  * Animate
