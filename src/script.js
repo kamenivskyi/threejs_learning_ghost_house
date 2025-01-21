@@ -18,6 +18,8 @@ const scene = new THREE.Scene()
  * Textures
  */
 const textureLoader = new THREE.TextureLoader()
+
+// door
 const doorColorTexture = textureLoader.load('/textures/door/color.jpg')
 const doorAlphaTexture = textureLoader.load('/textures/door/alpha.jpg')
 const doorAmbientOcclusionTexture = textureLoader.load('/textures/door/ambientOcclusion.jpg')
@@ -26,10 +28,32 @@ const doorMetalnessTexture = textureLoader.load('/textures/door/metalness.jpg')
 const doorNormalTexture = textureLoader.load('/textures/door/normal.jpg')
 const doorRoughnessTexture = textureLoader.load('/textures/door/roughness.jpg')
 
+// bricks
 const bricksColorTexture = textureLoader.load('/textures/bricks/color.jpg')
 const bricksAmbientOcclusionTexture = textureLoader.load('/textures/bricks/ambientOcclusion.jpg')
 const bricksNormalTexture = textureLoader.load('/textures/bricks/normal.jpg')
 const bricksRoughnessTexture = textureLoader.load('/textures/bricks/roughness.jpg')
+
+// grass
+const grassColorTexture = textureLoader.load('/textures/grass/color.jpg')
+const grassAmbientOcclusionTexture = textureLoader.load('/textures/grass/ambientOcclusion.jpg')
+const grassNormalTexture = textureLoader.load('/textures/grass/normal.jpg')
+const grassRoughnessTexture = textureLoader.load('/textures/grass/roughness.jpg')
+
+console.log('grassColorTexture.repeat: ', grassColorTexture.repeat)
+grassColorTexture.repeat.set(8, 8)
+grassAmbientOcclusionTexture.repeat.set(8, 8)
+grassNormalTexture.repeat.set(8, 8)
+grassRoughnessTexture.repeat.set(8, 8)
+
+grassColorTexture.wrapS = THREE.RepeatWrapping
+grassColorTexture.wrapT = THREE.RepeatWrapping
+grassAmbientOcclusionTexture.wrapS = THREE.RepeatWrapping
+grassAmbientOcclusionTexture.wrapT = THREE.RepeatWrapping
+grassNormalTexture.wrapS = THREE.RepeatWrapping
+grassNormalTexture.wrapT = THREE.RepeatWrapping
+grassRoughnessTexture.wrapS = THREE.RepeatWrapping
+grassRoughnessTexture.wrapT = THREE.RepeatWrapping
 /**
  * House
  */
@@ -39,7 +63,19 @@ scene.add(house)
 // Floor
 const floor = new THREE.Mesh(
     new THREE.PlaneGeometry(20, 20),
-    new THREE.MeshStandardMaterial({ color: '#a9c388' })
+    new THREE.MeshStandardMaterial({ 
+        color: '#a9c388',
+        map: grassColorTexture,
+        transparent: true,
+        // ambient occlusion map requires uv2 attriute
+        aoMap: grassAmbientOcclusionTexture,
+        normalMap: grassNormalTexture,
+        roughnessMap: grassRoughnessTexture,
+    })
+)
+floor.geometry.setAttribute(
+    'uv2',
+    new THREE.Float32BufferAttribute(floor.geometry.attributes.uv.array, 2)
 )
 floor.rotation.x = - Math.PI * 0.5
 floor.position.y = 0
@@ -53,6 +89,7 @@ const walls = new THREE.Mesh(
     new THREE.MeshStandardMaterial({ 
         color: '#F27900',
         map: bricksColorTexture,
+        // ambient occlusion map requires uv2 attriute
         aoMap: bricksAmbientOcclusionTexture,
         normalMap: bricksNormalTexture,
         roughness: bricksRoughnessTexture
