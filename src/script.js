@@ -39,7 +39,7 @@ const wallsDepth = 4
 const wallsHeight = 3
 const walls = new THREE.Mesh(
     new THREE.BoxGeometry(4, wallsHeight, wallsDepth),
-    new THREE.MeshStandardMaterial({ color: 0xffff00 })
+    new THREE.MeshStandardMaterial({ color: '#F27900' })
 )
 walls.position.y = wallsHeight / 2
 house.add(walls)
@@ -65,6 +65,15 @@ const door = new THREE.Mesh(
 door.position.z = (wallsDepth / 2) + 0.01
 door.position.y = 1
 house.add(door)
+
+// door light
+const pointLight = new THREE.PointLight('#ff7d46', 1, 7)
+pointLight.position.set(0, 2.2, 2.7)
+house.add(pointLight)
+
+const sphereSize = 1
+const pointLightHelper = new THREE.PointLightHelper(pointLight, 1)
+// house.add(pointLightHelper)
 
 // Bushes
 const bushesArray = [
