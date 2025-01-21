@@ -26,6 +26,10 @@ const doorMetalnessTexture = textureLoader.load('/textures/door/metalness.jpg')
 const doorNormalTexture = textureLoader.load('/textures/door/normal.jpg')
 const doorRoughnessTexture = textureLoader.load('/textures/door/roughness.jpg')
 
+const bricksColorTexture = textureLoader.load('/textures/bricks/color.jpg')
+const bricksAmbientOcclusionTexture = textureLoader.load('/textures/bricks/ambientOcclusion.jpg')
+const bricksNormalTexture = textureLoader.load('/textures/bricks/normal.jpg')
+const bricksRoughnessTexture = textureLoader.load('/textures/bricks/roughness.jpg')
 /**
  * House
  */
@@ -46,9 +50,20 @@ const wallsDepth = 4
 const wallsHeight = 3
 const walls = new THREE.Mesh(
     new THREE.BoxGeometry(4, wallsHeight, wallsDepth),
-    new THREE.MeshStandardMaterial({ color: '#F27900' })
+    new THREE.MeshStandardMaterial({ 
+        color: '#F27900',
+        map: bricksColorTexture,
+        aoMap: bricksAmbientOcclusionTexture,
+        normalMap: bricksNormalTexture,
+        roughness: bricksRoughnessTexture
+    })
 )
 walls.position.y = wallsHeight / 2
+
+walls.geometry.setAttribute(
+    'uv2',
+    new THREE.Float32BufferAttribute(walls.geometry.attributes.uv.array, 2)
+)
 house.add(walls)
 
 // roof
@@ -71,7 +86,7 @@ const door = new THREE.Mesh(
         aoMap: doorAmbientOcclusionTexture,
         displacementMap: doorHeightTexture,
         displacementScale: 0.1,
-        // normalMap adds transfusion/polishing/shine effect
+        // normalMap adds more details and transfusion/polishing/shine effect
         normalMap: doorNormalTexture,
         // roughnessMap adds light roughness
         roughnessMap: doorRoughnessTexture
