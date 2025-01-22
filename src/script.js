@@ -24,7 +24,7 @@ const doorColorTexture = textureLoader.load('/textures/door/color.jpg')
 const doorAlphaTexture = textureLoader.load('/textures/door/alpha.jpg')
 const doorAmbientOcclusionTexture = textureLoader.load('/textures/door/ambientOcclusion.jpg')
 const doorHeightTexture = textureLoader.load('/textures/door/height.jpg')
-const doorMetalnessTexture = textureLoader.load('/textures/door/metalness.jpg')
+// const doorMetalnessTexture = textureLoader.load('/textures/door/metalness.jpg')
 const doorNormalTexture = textureLoader.load('/textures/door/normal.jpg')
 const doorRoughnessTexture = textureLoader.load('/textures/door/roughness.jpg')
 
@@ -40,7 +40,6 @@ const grassAmbientOcclusionTexture = textureLoader.load('/textures/grass/ambient
 const grassNormalTexture = textureLoader.load('/textures/grass/normal.jpg')
 const grassRoughnessTexture = textureLoader.load('/textures/grass/roughness.jpg')
 
-console.log('grassColorTexture.repeat: ', grassColorTexture.repeat)
 grassColorTexture.repeat.set(8, 8)
 grassAmbientOcclusionTexture.repeat.set(8, 8)
 grassNormalTexture.repeat.set(8, 8)
@@ -141,12 +140,12 @@ door.position.y = 1
 house.add(door)
 
 // door light
-const pointLight = new THREE.PointLight('#ff7d46', 1, 7)
-pointLight.position.set(0, 2.2, 2.7)
-house.add(pointLight)
+const doorLight = new THREE.PointLight('#ff7d46', 1, 7)
+doorLight.position.set(0, 2.2, 2.7)
+house.add(doorLight)
 
 const sphereSize = 1
-const pointLightHelper = new THREE.PointLightHelper(pointLight, 1)
+const pointLightHelper = new THREE.PointLightHelper(doorLight, 1)
 // house.add(pointLightHelper)
 
 // Fog
@@ -181,12 +180,13 @@ const bushesArray = [
 const bushGeometry = new THREE.SphereGeometry(1, 16, 16)
 const bushMaterial = new THREE.MeshStandardMaterial({ color: '#418c4c' })
 
-bushesArray.forEach((bush) => {
-    const bushMesh = new THREE.Mesh(bushGeometry, bushMaterial)
-    bushMesh.position.set(...bush.position)
-    bushMesh.scale.set(...bush.scale)
+bushesArray.forEach((item) => {
+    const bush = new THREE.Mesh(bushGeometry, bushMaterial)
+    bush.position.set(...item.position)
+    bush.scale.set(...item.scale)
+    bush.castShadow = true
 
-    house.add(bushMesh)
+    house.add(bush)
 })
 
 // Graves
@@ -211,6 +211,7 @@ function generateGraves() {
         grave.position.set(x, 0.3, z)
         grave.rotation.y = (Math.random() - 0.5) * 0.7
         grave.rotation.z = (Math.random() - 0.5) * 0.4
+        grave.castShadow = true
         graves.add(grave)
     }
 }
@@ -242,6 +243,32 @@ scene.add(ghost2)
 
 const ghost3 = new THREE.PointLight('#ffff00', 2, 3)
 scene.add(ghost3)
+
+/**
+ * Shadows
+ */
+// moonLight.castShadow = true
+doorLight.castShadow = true
+ghost1.castShadow = true
+ghost2.castShadow = true
+ghost3.castShadow = true
+floor.receiveShadow = true
+
+moonLight.shadow.mapSize.width = 256
+moonLight.shadow.mapSize.height = 256
+moonLight.shadow.camera.far = 15
+
+doorLight.shadow.mapSize.width = 256
+doorLight.shadow.mapSize.height = 256
+doorLight.shadow.camera.far = 7
+
+ghost1.shadow.mapSize.width = 256
+ghost2.shadow.mapSize.height = 256
+ghost3.shadow.camera.far = 7
+
+//Create a helper for the shadow camera (optional)
+const helper = new THREE.CameraHelper(moonLight.shadow.camera)
+// scene.add(helper)
 
 /**
  * Sizes
@@ -288,6 +315,8 @@ const renderer = new THREE.WebGLRenderer({
 })
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+renderer.shadowMap.enabled = true
+// renderer.shadowMap.type = THREE.PCFSoftShadowMap
 renderer.setClearColor(fogColor)
 
 /**
